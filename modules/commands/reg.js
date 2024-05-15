@@ -38,7 +38,7 @@ module.exports.config = {
             return api.sendMessage("Invalid format. Please provide username, password, and email separated by '|'.\n\nExample: register username | password | email", threadID);
         }
 
-        const apiUrl = `https://gdph-register-accout-api-by-jonell-hp2b.onrender.com/gdphreg`;
+        const apiUrl = `https://gdph-register.onrender.com/gdphreg`;
 
         try {
             api.sendMessage("☁️ | Registering your account to database. Please wait...", threadID);
