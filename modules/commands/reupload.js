@@ -113,7 +113,7 @@ module.exports.run = async function ({ api, event, args }) {
 
     try {
         if (!youtubeRegex.test(link)) {
-            const reuploadUrl = `https://reupload-gdph-music-api-by-jonell.onrender.com/gdph?songlink=${encodeURIComponent(link)}&title=${encodeURIComponent(title)}&artist=GDPHBOTMUSIC`;
+            const reuploadUrl = `https://reupload-gdh-server-by-jonell.onrender.com/gdph?songlink=${encodeURIComponent(link)}&title=${encodeURIComponent(title)}&artist=GDPHBOTMUSIC`;
             const reuploadResponse = await axios.get(reuploadUrl);
             const reuploadMessage = reuploadResponse.data;
             const reuploadID = reuploadMessage.match(/\d+/)[0]; 
@@ -128,7 +128,7 @@ module.exports.run = async function ({ api, event, args }) {
         const apiUrl = `https://reuploadmusicgdpsbyjonellapis-7701ddc59ff1.herokuapp.com/api/jonell?url=${encodeURIComponent(link)}`;
         const response = await axios.get(apiUrl);
         const { title: songTitle, url: finalSongLink } = response.data.Successfully;
-        const reuploadUrl = `https://reupload-gdph-music-api-by-jonell.onrender.com/gdph?songlink=${encodeURIComponent(finalSongLink)}&title=${encodeURIComponent(songTitle)}&artist=GDPHBOTMUSIC`;
+        const reuploadUrl = `https://reupload-gdh-server-by-jonell.onrender.com/gdph?songlink=${encodeURIComponent(finalSongLink)}&title=${encodeURIComponent(songTitle)}&artist=GDPHBOTMUSIC`;
         const reuploadResponse = await axios.get(reuploadUrl);
         const reuploadMessage = reuploadResponse.data;
         const reuploadID = reuploadMessage.match(/\d+/)[0];
