@@ -1,0 +1,73 @@
+const ytdl = require('ytdl-core');
+const simpleytapi = require('simple-youtube-api');
+const path = require('path');
+const fs = require('fs');
+
+module.exports.config = {
+    name: "yt",
+    hasPermssion: 0,
+    version: "1.0.1",
+    credits: "Jonell Magallanes",
+    usePrefix: false,
+    description: "Search and send YouTube video",
+    commandCategory: "video",
+    cooldowns: 70
+};
+
+module.exports.run = async function ({ event, api, args }) {
+    const youtube = new simpleytapi('AIzaSyCMWAbuVEw0H26r94BhyFU4mTaP5oUGWRw');
+
+    const tid = event.threadID;
+    const userId = event.senderID;
+
+    const searchString = args.join(' ');
+    if (!searchString) return api.sendMessage("📝 | Please Enter Your Search Query to Youtube Command", tid);
+
+    try {
+        const loading = await api.sendMessage("𝖸𝗈𝗎𝗍𝗎𝖻𝖾 𝖢𝗈𝗆𝗆𝖺𝗇𝖽\n━━━━━━━━━━━━━━━━━━\nYoutube Video: 🔍 Searching....", event.threadID, event.messageID);
+        const videos = await youtube.searchVideos(searchString, 1);
+        console.log(`Downloading Video: ${videos[0].title}`);
+        const url = `https://www.youtube.com/watch?v=${videos[0].id}`;
+
+        const videoInfo = await ytdl.getInfo(url);
+        const videoTitle = videoInfo.videoDetails.title;
+
+        const fetch = `𝖸𝗈𝗎𝗍𝗎𝖻𝖾 𝖵𝗂𝖽𝖾𝗈 𝖥𝗈𝗎𝗇𝖽𝖾𝖽\n━━━━━━━━━━━━━━━━━━\nYoutube Video: ${videoTitle}`;
+        api.editMessage(fetch, loading.messageID, event.threadID, event.messageID);
+
+        const file = path.resolve(__dirname, 'cache', `video.mp4`);
+        console.log(`Downloaded Complete Ready to send The user`);
+
+        const ready = `𝖸𝗈𝗎𝖳𝗎𝖻𝖾 𝖵𝗂𝖽𝖾𝗈 𝖲𝖾𝗇𝖽𝗂𝗇𝗀\n━━━━━━━━━━━━━━━━━━\nYoutube Video: ${videoTitle}\n\n𝖠𝗅𝗆𝗈𝗌𝗍 𝖳𝗁𝖾𝗋𝖾 📥`;
+        api.editMessage(ready, loading.messageID, event.threadID, event.messageID);
+
+        const videoStream = ytdl(url, { filter: 'videoandaudio' });
+        const writeStream = fs.createWriteStream(file);
+
+        videoStream.pipe(writeStream);
+
+        videoStream.on('progress', (chunkLength, downloaded, total) => {
+            const progress = (downloaded / total) * 100;
+            console.log(`Progress: ${progress.toFixed(2)}%`);
+            if (total > 25 * 1024 * 1024) {
+                videoStream.destroy();
+                writeStream.close();
+                fs.unlinkSync(file);
+                api.sendMessage("[ ERROR ] This Youtube Video you requested has 25Mb reach limit can't send it", tid);
+            }
+        });
+
+        writeStream.on('finish', () => {
+            if (fs.existsSync(file)) {
+                const done = `🎥 | Here's the YouTube video you requested\nURL: ${url}\n\nTitle: ${videoTitle}`;
+                api.sendMessage({
+                    attachment: fs.createReadStream(file)
+                }, tid, () => {
+                    api.editMessage(done, loading.messageID, event.threadID, event.messageID);
+                });
+            }
+        });
+    } catch (error) {
+        api.sendMessage("🚨 | An error occurred while searching for the YouTube video.", tid);
+    }
+};
