@@ -19,7 +19,7 @@ module.exports.run = async function ({ api, event, args }) {
     try {
         const waitMessage = await api.sendMessage("🔍 | 𝖢𝗁𝖾𝖼𝗄𝗂𝗇𝗀...", event.threadID, event.messageID);
 
-        const response = await axios.get(`https://geometry-dash-fs-secondary-api-by-jonell.onrender.com/api/whorated?id=${levelID}`);
+        const response = await axios.get(`https://geometry-dash-gdph-api.onrender.com/api/whorated?id=${levelID}`);
         const data = response.data;
 
         if (!data.WhoRated) {
