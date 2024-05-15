@@ -20,7 +20,7 @@ module.exports.run = async function ({ api, event, args }) {
     try {
         const waitMessage = await api.sendMessage("🔍 | 𝖢𝗁𝖾𝖼𝗄𝗂𝗇𝗀.....", event.threadID, event.messageID);
 
-        const response = await axios.get(`https://geometry-dash-fs-secondary-api-by-jonell.onrender.com/api/player?user=${username}`);
+        const response = await axios.get(`https://geometry-dash-gdph-api.onrender.com/api/player?user=${username}`);
         const data = response.data;
 
         const formattedResponse = `[ 𝖦𝖣𝖯𝖧 𝖲𝖾𝗋𝗏𝖾𝗋 𝖯𝗅𝖺𝗒𝖾𝗋 𝖲𝗍𝖺𝗍𝗌 ]\n
