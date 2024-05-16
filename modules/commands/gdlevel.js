@@ -64,7 +64,7 @@ module.exports.run = async function ({ api, event, args }) {
         levelMessage += `𝖲𝗈𝗇𝗀 𝖲𝗂𝗓𝖾: ${levelInfo.songSize}\n`;
         levelMessage += `𝖲𝗈𝗇𝗀 𝖨𝖣: ${levelInfo.songID}\n`;
 
-        const screenshotPath = `./cache/levelgd.png`;
+        const screenshotPath = `./cache/${levelid}.png`;
 
         if (!fs.existsSync(screenshotPath)) {
             const screenshotResponse = await axios.get(screenshotUrl, { responseType: 'arraybuffer' });
