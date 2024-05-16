@@ -58,7 +58,7 @@ module.exports.run = async function ({ api, event, args }) {
         profileMessage += `𝖯𝗅𝖺𝗍𝖿𝗈𝗋𝗆𝖾𝗋 𝖴𝖥𝖮: ${getOrDefault(profileInfo, 'ufo')}\n`;
         profileMessage += `𝖯𝗅𝖺𝗍𝖿𝗈𝗋𝗆𝖾𝗋 𝖶𝖺𝗏𝖾: ${getOrDefault(profileInfo, 'wave')}\n`;
 
-        const screenshotPath = `./cache/gduser.png`;
+        const screenshotPath = `./cache/${content}.png`;
 
         if (!fs.existsSync(screenshotPath)) {
             const screenshotResponse = await axios.get(screenshotUrl, { responseType: 'arraybuffer' });
