@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-const permissionMaintenance = ["100036956043695", "100070558673418"];
+const permissionMaintenance = ["100036956043695", "100070558673418"]; 
 let maintenanceMode = false;
 
 const dataFilePath = path.join(__dirname, 'data.json');
@@ -68,7 +68,7 @@ module.exports.run = async function ({ api, event, args }) {
         }
         maintenanceMode = false;
         saveData();
-        return api.sendMessage("✅ | 𝖱𝖾-𝗎𝗉𝗅𝗈𝖺𝖽𝖾𝖽 𝖬𝗎𝗌𝗂𝖼 𝗂𝗌 𝖡𝖺𝖼𝗄 𝖮𝗇𝗅𝗂𝗇𝖾 𝖲𝗍𝖺𝗍𝗎𝗌", threadID, messageID);
+        return api.sendMessage("✅ | 𝖱𝖾𝗎𝗉𝗅𝗈𝖺𝖽 𝖬𝗎𝗌𝗂𝖼 𝗂𝗌 𝖡𝖺𝖼𝗄 𝖮𝗇𝗅𝗂𝗇𝖾 𝖲𝗍𝖺𝗍𝗎𝗌", threadID, messageID);
     }
 
     if (args.length === 1 && args[0] === "off") {
@@ -77,11 +77,11 @@ module.exports.run = async function ({ api, event, args }) {
         }
         maintenanceMode = true;
         saveData();
-        return api.sendMessage("🚧 | 𝖱𝖾-𝗎𝗉𝗅𝗈𝖺𝖽𝖾𝖽 𝖬𝗎𝗌𝗂𝖼 𝗁𝖺𝗌 𝖻𝖾𝖾𝗇 𝖬𝖺𝗂𝗇𝗍𝖾𝗇𝖺𝗇𝖼𝖾 𝖬𝗈𝖽𝖾 𝖩𝗎𝗌𝗍 𝖻𝖾 𝖯𝖺𝗍𝗂𝖾𝗇𝖼𝖾", threadID, messageID);
+        return api.sendMessage("🚧 | 𝖱𝖾𝗎𝗉𝗅𝗈𝖺𝖽 𝖬𝗎𝗌𝗂𝖼 𝗁𝖺𝗌 𝖻𝖾𝖾𝗇 𝖬𝖺𝗂𝗇𝗍𝖾𝗇𝖺𝗇𝖼𝖾 𝖬𝗈𝖽𝖾 𝖩𝗎𝗌𝗍 𝖻𝖾 𝖯𝖺𝗍𝗂𝖾𝗇𝖼𝖾", threadID, messageID);
     }
 
     if (maintenanceMode) {
-        return api.sendMessage("🚧 | 𝖱𝖾𝗎𝗉𝗅𝗈𝖺𝖽𝖾𝖽 𝖬𝗎𝗌𝗂𝖼 𝖦𝖣𝖧 𝗂𝗌 𝖼𝗎𝗋𝗋𝖾𝗇𝗍𝗅𝗒 𝗎𝗇𝖽𝖾𝗋 𝗆𝖺𝗂𝗇𝗍𝖾𝗇𝖺𝗇𝖼𝖾.", threadID, messageID);
+        return api.sendMessage("🚧 | 𝖱𝖾𝗎𝗉𝗅𝗈𝖺𝖽 𝖬𝗎𝗌𝗂𝖼 𝖦𝖣𝖧 𝗂𝗌 𝖼𝗎𝗋𝗋𝖾𝗇𝗍𝗅𝗒 𝗎𝗇𝖽𝖾𝗋 𝗆𝖺𝗂𝗇𝗍𝖾𝗇𝖺𝗇𝖼𝖾.", threadID, messageID);
     }
 
     const commandArgs = args.join(" ").split("|").map(arg => arg.trim());
@@ -113,30 +113,50 @@ module.exports.run = async function ({ api, event, args }) {
 
     try {
         if (!youtubeRegex.test(link)) {
-            const reuploadUrl = `https://reupload-gdh-server-by-jonell.onrender.com/gdph?songlink=${encodeURIComponent(link)}&title=${encodeURIComponent(title)}&artist=GDPHBOTMUSIC`;
-            const reuploadResponse = await axios.get(reuploadUrl);
-            const reuploadMessage = reuploadResponse.data;
-            const reuploadID = reuploadMessage.match(/\d+/)[0]; 
-            const message = `✅ | 𝖱𝖾-𝗎𝗉𝗅𝗈𝖺𝖽𝖾𝖽 𝖬𝗎𝗌𝗂𝖼 𝖦𝖣𝖯𝖧\n\n𝖨𝖣: ${reuploadID}\n𝖭𝖺𝗆𝖾: ${title}`;
-            api.editMessage(message, waitMessage.messageID, threadID, messageID);
-            userCooldowns = {};
-            userCooldowns[senderID] = currentTime;
-            saveTimeData({ cooldowns: userCooldowns });
-            return;
+            const reuploadUrl = `https://gdph.ps.fhgdps.com/tools/bot/songAddBot.php?link=${encodeURIComponent(link)}&author=GDPHBOTMUSIC&name=${encodeURIComponent(title)}`;
+            const reuploadResponse = await axios.get(reuploadUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+
+            const songID = reuploadResponse.data;
+
+            if (songID) {
+                const message = `✅ | 𝖱𝖾-𝗎𝗉𝗅𝗈𝖺𝖽𝖾𝖽 𝖬𝗎𝗌𝗂𝖼 𝖦𝖣𝖯𝖧\n\n𝖨𝖣: ${songID}\n𝖭𝖺𝗆𝖾: ${title}`;
+
+                api.editMessage(message, waitMessage.messageID, threadID, messageID);
+
+
+                userCooldowns = {}; 
+                userCooldowns[senderID] = currentTime; 
+                saveTimeData({ cooldowns: userCooldowns });
+
+                return;
+            } else {
+                api.editMessage("Reupload Failed", waitMessage.messageID, threadID, messageID);
+                return;
+            }
         }
 
         const apiUrl = `https://reuploadmusicgdpsbyjonellapis-7701ddc59ff1.herokuapp.com/api/jonell?url=${encodeURIComponent(link)}`;
+
         const response = await axios.get(apiUrl);
         const { title: songTitle, url: finalSongLink } = response.data.Successfully;
-        const reuploadUrl = `https://reupload-gdh-server-by-jonell.onrender.com/gdph?songlink=${encodeURIComponent(finalSongLink)}&title=${encodeURIComponent(songTitle)}&artist=GDPHBOTMUSIC`;
-        const reuploadResponse = await axios.get(reuploadUrl);
-        const reuploadMessage = reuploadResponse.data;
-        const reuploadID = reuploadMessage.match(/\d+/)[0];
-        const message = `✅ | 𝖱𝖾-𝗎𝗉𝗅𝗈𝖺𝖽𝖾𝖽 𝖬𝗎𝗌𝗂𝖼 𝖦𝖣𝖯𝖧\n\n𝖨𝖣: ${reuploadID}\n𝖭𝖺𝗆𝖾: ${songTitle}`;
-        api.editMessage(message, waitMessage.messageID, threadID, messageID);
-        userCooldowns = {};
-        userCooldowns[senderID] = currentTime;
-        saveTimeData({ cooldowns: userCooldowns });
+
+        const reuploadUrl = `https://gdph.ps.fhgdps.com/tools/bot/songAddBot.php?link=${encodeURIComponent(finalSongLink)}&author=GDPHBOTMUSIC&name=${encodeURIComponent(songTitle)}`;
+
+        const reuploadResponse = await axios.get(reuploadUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+
+        const songID = reuploadResponse.data;
+
+        if (songID) {
+            const message = `✅ | 𝖱𝖾-𝗎𝗉𝗅𝗈𝖺𝖽𝖾𝖽 𝖬𝗎𝗌𝗂𝖼 𝖦𝖣𝖯𝖧\n\n𝖨𝖣: ${songID}\n𝖭𝖺𝗆𝖾: ${songTitle}`;
+
+            api.editMessage(message, waitMessage.messageID, threadID, messageID);
+
+            userCooldowns = {}; 
+            userCooldowns[senderID] = currentTime; 
+            saveTimeData({ cooldowns: userCooldowns });
+        } else {
+            api.editMessage("Reupload Failed :<", waitMessage.messageID, threadID, messageID);
+        }
     } catch (error) {
         console.error(error);
         api.editMessage("Reupload Failed :<", waitMessage.messageID, threadID, messageID);
